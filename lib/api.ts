@@ -45,7 +45,7 @@ export const api = {
 
   // ── Meta ───────────────────────────────────────────────────────────────────
   meta: {
-    get: () => request<{ languages: string[]; levels: string[] }>('/meta'),
+    get: () => request<import('@/types').MetaResponse>('/meta'),
   },
 
   // ── Rooms ──────────────────────────────────────────────────────────────────
@@ -71,10 +71,10 @@ export const api = {
       request<import('@/types').Conversation[]>(`/rooms/${roomId}/conversations`),
     get: (roomId: string, convId: string) =>
       request<import('@/types').Conversation>(`/rooms/${roomId}/conversations/${convId}`),
-    create: (roomId: string, prompt?: string) =>
+    create: (roomId: string, prompt?: string, maxTurns?: number) =>
       request<import('@/types').Conversation>(`/rooms/${roomId}/conversations`, {
         method: 'POST',
-        body: JSON.stringify({ prompt: prompt ?? null }),
+        body: JSON.stringify({ prompt: prompt ?? null, max_turns: maxTurns }),
       }),
     submitTurn: (
       roomId: string,

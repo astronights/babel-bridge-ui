@@ -1,7 +1,8 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { Button, Input, Alert } from '@/components/ui'
+import { useRouter } from 'next/dist/client/components/navigation'
 
 export default function AuthPage() {
   const { login, register } = useAuth()
@@ -11,6 +12,13 @@ export default function AuthPage() {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const router = useRouter()
+  const { token } = useAuth()
+
+  useEffect(() => {
+    if (token) router.push('/dashboard')
+  }, [token, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

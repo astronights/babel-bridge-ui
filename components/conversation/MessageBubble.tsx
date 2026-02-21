@@ -1,6 +1,6 @@
 'use client'
 import { clsx } from 'clsx'
-import { Message, Participant, TextMode, SCORE_COLOR, SCORE_BG, LANG_SPEECH, Language, PLAYER_COLORS } from '@/types'
+import { Message, Participant, TextMode, SCORE_COLOR, SCORE_BG, PLAYER_COLORS } from '@/types'
 import { diffWords } from '@/lib/diff'
 import { TypingDots } from '@/components/ui'
 
@@ -10,7 +10,7 @@ interface BubbleProps {
   isAI: boolean
   participant?: Participant
   textMode: TextMode
-  language: Language
+  speechCode: string
   playerIndex: number
   showTyping?: boolean   // AI typing animation
 }
@@ -48,10 +48,9 @@ function DiffText({ input, target }: { input: string; target: string }) {
 }
 
 export function MessageBubble({
-  message, isMe, isAI, participant, textMode, language, playerIndex, showTyping,
+  message, isMe, isAI, participant, textMode, speechCode, playerIndex, showTyping,
 }: BubbleProps) {
   const color = PLAYER_COLORS[playerIndex % PLAYER_COLORS.length]
-  const speechLang = LANG_SPEECH[language]
   const displayName = isAI ? 'AI' : (participant?.display_name ?? 'Player')
   const hasResponse = !!message.response
 
@@ -76,7 +75,7 @@ export function MessageBubble({
           {getDisplayText(message, textMode)}
         </div>
         <button
-          onClick={() => speak(message.roman_text, speechLang)}
+          onClick={() => speak(message.roman_text, speechCode)}
           className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
         >
           🔊 Listen
@@ -174,7 +173,7 @@ export function MessageBubble({
       {/* Listen button */}
       {hasResponse && (
         <button
-          onClick={() => speak(message.roman_text, speechLang)}
+          onClick={() => speak(message.roman_text, speechCode)}
           className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
         >
           🔊 Listen

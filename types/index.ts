@@ -1,5 +1,5 @@
-export type Language = 'Russian' | 'Chinese' | 'Swedish'
-export type Level = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
+export type LanguageCode = string
+export type LevelCode = string
 export type RoomStatus = 'waiting' | 'active' | 'completed'
 export type ConversationStatus = 'active' | 'completed'
 export type Role = 'A' | 'B' | 'C' | 'D'
@@ -44,8 +44,8 @@ export interface Message {
 
 export interface Room {
   id: string
-  language: Language
-  level: Level
+  language: LanguageCode
+  level: LevelCode
   max_players: number
   join_code: string
   status: RoomStatus
@@ -71,9 +71,24 @@ export interface TokenResponse {
   username: string
 }
 
+export interface LanguageMeta {
+  code: LanguageCode
+  display_name: string
+  native_symbol: string
+  roman_symbol: string
+  speech_code: string
+}
+
+export interface LevelMeta {
+  code: LevelCode
+  description: string
+  default_scenario: string
+  scenarios: Record<string, string>
+}
+
 export interface MetaResponse {
-  languages: Language[]
-  levels: Level[]
+  languages: LanguageMeta[]
+  levels: LevelMeta[]
 }
 
 // Score color helpers
@@ -98,9 +113,3 @@ export const SCORE_BG: Record<string, string> = {
 export const PLAYER_COLORS = [
   '#e8643a', '#4a9eff', '#3dba7e', '#d4a843', '#9b59b6',
 ]
-
-export const LANG_SPEECH: Record<Language, string> = {
-  Russian: 'ru-RU',
-  Chinese: 'zh-CN',
-  Swedish: 'sv-SE',
-}

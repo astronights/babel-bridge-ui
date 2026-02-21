@@ -6,6 +6,7 @@ import { api } from '@/lib/api'
 import { Room } from '@/types'
 import { TopNav } from '@/components/ui/TopNav'
 import { Button, Input, Select, Card, Alert, Badge, Spinner } from '@/components/ui'
+import { useMeta } from '@/hooks/useMeta'
 
 const LANG_COLORS: Record<string, string> = {
   Russian: '#e8643a',
@@ -49,8 +50,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [showJoin, setShowJoin] = useState(false)
-  const [languages, setLanguages] = useState<string[]>([])
-  const [levels, setLevels] = useState<string[]>([])
+  const { meta } = useMeta()
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -76,13 +76,13 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!token) { router.push('/'); return }
     loadRooms()
-    api.meta.get().then(m => {
-      setLanguages(m.languages)
-      setLevels(m.levels)
-      setLang(m.languages[0] ?? '')
-      setLevel(m.levels[0] ?? '')
-    })
   }, [token, router, loadRooms])
+
+  useEffect(() => {
+    if (!meta) return
+    if (!lang) setLang(meta.languages[0]?.display_name ?? '')
+    if (!level) setLevel(meta.levels[0]?.code ?? '')
+  }, [meta])
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
@@ -139,9 +139,9 @@ export default function DashboardPage() {
                 placeholder="e.g. Maria" required />
               <div className="grid grid-cols-2 gap-3">
                 <Select label="Language" value={lang} onChange={e => setLang(e.target.value)}
-                  options={languages.map(l => ({ value: l, label: l }))} />
+                  options={(meta?.languages ?? []).map(l => ({ value: l.display_name, label: l.display_name }))} />
                 <Select label="Level" value={level} onChange={e => setLevel(e.target.value)}
-                  options={levels.map(l => ({ value: l, label: l }))} />
+                  options={(meta?.levels ?? []).map(l => ({ value: l.code, label: l.code }))} />
               </div>
               <Select label="Max Players" value={maxPlayers} onChange={e => setMaxPlayers(e.target.value)}
                 options={[2, 3, 4].map(n => ({ value: String(n), label: `${n} players` }))} />

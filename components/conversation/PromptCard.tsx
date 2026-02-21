@@ -1,12 +1,15 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import { clsx } from 'clsx'
-import { Message, InputMode, LANG_SPEECH, Language } from '@/types'
+import { Message, InputMode } from '@/types'
 import { Button, PillToggle } from '@/components/ui'
 
 interface PromptCardProps {
   message: Message
-  language: Language
+  speechCode: string
+  romanSymbol: string
+  nativeSymbol: string
+  displayName: string
   inputMode: InputMode
   onInputModeChange: (m: InputMode) => void
   onSubmit: (text: string) => Promise<void>
@@ -23,13 +26,11 @@ function speak(text: string, lang: string) {
 }
 
 export function PromptCard({
-  message, language, inputMode, onInputModeChange, onSubmit, submitting,
+  message, speechCode, romanSymbol, nativeSymbol, displayName, inputMode, onInputModeChange, onSubmit, submitting,
 }: PromptCardProps) {
   const [text, setText] = useState('')
   const [showHint, setShowHint] = useState(false)
   const taRef = useRef<HTMLTextAreaElement>(null)
-  const speechLang = LANG_SPEECH[language]
-  const isSwedish = language === 'Swedish'
 
   useEffect(() => { taRef.current?.focus() }, [])
 
@@ -50,16 +51,14 @@ export function PromptCard({
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs font-bold text-accent uppercase tracking-wide">🎯 Your turn</p>
         {/* Input mode toggle — hidden for Swedish since roman = native */}
-        {!isSwedish && (
-          <PillToggle
-            options={[
-              { value: 'roman' as InputMode, label: ' ABC ' },
-              { value: 'native' as InputMode, label: ' 文 ' },
-            ]}
-            value={inputMode}
-            onChange={onInputModeChange}
-          />
-        )}
+        <PillToggle
+          options={[
+            { value: 'roman' as InputMode, label: romanSymbol.toUpperCase() },
+            { value: 'native' as InputMode, label: nativeSymbol },
+          ]}
+          value={inputMode}
+          onChange={onInputModeChange}
+        />
       </div>
 
       {/* English prompt — the challenge */}
@@ -82,7 +81,7 @@ export function PromptCard({
 
       {/* Listen to the target */}
       <button
-        onClick={() => speak(message.roman_text, speechLang)}
+        onClick={() => speak(message.roman_text, speechCode)}
         className="text-xs text-accent2 hover:underline flex items-center gap-1 mb-3"
       >
         🔊 Hear the line
@@ -100,8 +99,8 @@ export function PromptCard({
           rows={1}
           placeholder={
             inputMode === 'native'
-              ? `Type in ${language} script…`
-              : `Type in romanised ${language}…`
+              ? `Type in ${displayName} script…`
+              : `Type in romanised ${displayName}…`
           }
           className={clsx(
             'flex-1 resize-none px-3 py-2.5 border-[1.5px] rounded-xl text-sm font-dm',

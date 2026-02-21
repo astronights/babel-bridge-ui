@@ -7,11 +7,14 @@ import { api } from '@/lib/api'
 import { Room, PLAYER_COLORS } from '@/types'
 import { TopNav } from '@/components/ui/TopNav'
 import { Button, Card, Alert, Badge, Spinner } from '@/components/ui'
+import { useMeta } from '@/hooks/useMeta'
 
 export default function WaitingRoomPage({ params }: { params: { roomId: string } }) {
   const router = useRouter()
   const { token } = useAuth()
+  const { getLanguage, getDefaultScenario } = useMeta()
   const [room, setRoom] = useState<Room | null>(null)
+  const [maxTurns, setMaxTurns] = useState(20)
   const [userId, setUserId] = useState<string | null>(null)
   const [prompt, setPrompt] = useState('')
   const [copied, setCopied] = useState(false)
@@ -57,7 +60,7 @@ export default function WaitingRoomPage({ params }: { params: { roomId: string }
     if (!room) return
     setError(''); setStarting(true)
     try {
-      const conv = await api.conversations.create(params.roomId, prompt || undefined)
+      const conv = await api.conversations.create(params.roomId, prompt || undefined, maxTurns)
       router.push(`/rooms/${params.roomId}/conversation/${conv.id}`)
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to start conversation')
@@ -143,12 +146,42 @@ export default function WaitingRoomPage({ params }: { params: { roomId: string }
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               rows={2}
-              placeholder="Leave blank for AI to pick a scenario, or describe your own…"
+              placeholder={
+                room
+                  ? getDefaultScenario(room.level, getLanguage(room.language)?.code ?? '')
+                  : 'Leave blank for AI to pick a scenario…'
+              }
               className="w-full px-3 py-2.5 border-[1.5px] border-border rounded-xl text-sm font-dm bg-cream text-ink outline-none focus:border-accent transition-colors resize-none"
             />
             <p className="text-xs text-muted mt-1.5">
               e.g. "Two friends argue about what to watch on TV"
             </p>
+          </Card>
+        )}
+
+        {isHost && (
+          <Card className="p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold uppercase tracking-wide text-muted">Conversation Length</h4>
+              <div className="flex items-center gap-1">
+                <span className="font-playfair font-black text-xl text-accent">{maxTurns}</span>
+                <span className="text-xs text-muted">Turns</span>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={2}
+              max={20}
+              step={1}
+              value={maxTurns}
+              onChange={e => setMaxTurns(Number(e.target.value))}
+              className="w-full accent-accent"
+            />
+            <div className="flex justify-between text-xs text-muted mt-1">
+              <span>2</span>
+              <span>12</span>
+              <span>20</span>
+            </div>
           </Card>
         )}
 

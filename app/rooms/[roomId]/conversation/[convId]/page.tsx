@@ -4,11 +4,12 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { usePolling } from '@/hooks/usePolling'
 import { api } from '@/lib/api'
-import { Conversation, Room, TextMode, InputMode, Language } from '@/types'
+import { Conversation, Room, TextMode, InputMode } from '@/types'
 import { MessageBubble } from '@/components/conversation/MessageBubble'
 import { PromptCard } from '@/components/conversation/PromptCard'
 import { ScoreBar } from '@/components/conversation/ScoreBar'
 import { PillToggle, Spinner } from '@/components/ui'
+import { useMeta } from '@/hooks/useMeta'
 
 export default function ConversationPage({
   params,
@@ -17,6 +18,7 @@ export default function ConversationPage({
 }) {
   const router = useRouter()
   const { token } = useAuth()
+  const { getSpeechCode, getNativeSymbol, getRomanSymbol } = useMeta()
   const [conv, setConv] = useState<Conversation | null>(null)
   const [room, setRoom] = useState<Room | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
@@ -136,8 +138,8 @@ export default function ConversationPage({
         <div className="w-fit flex-shrink-0">
           <PillToggle
             options={[
-              { value: 'roman' as TextMode, label: 'ABC' },
-              { value: 'native' as TextMode, label: '文' },
+              { value: 'roman' as TextMode, label: getRomanSymbol(room.language).toUpperCase() },
+              { value: 'native' as TextMode, label: getNativeSymbol(room.language) },
               { value: 'english' as TextMode, label: 'EN' },
             ]}
             value={textMode}
@@ -176,7 +178,7 @@ export default function ConversationPage({
               isAI={isAI}
               participant={participant}
               textMode={textMode}
-              language={room.language as Language}
+              speechCode={getSpeechCode(room.language)}
               playerIndex={playerIndex}
             />
           )
@@ -189,7 +191,7 @@ export default function ConversationPage({
             isMe={false}
             isAI={true}
             textMode={textMode}
-            language={room.language as Language}
+            speechCode={getSpeechCode(room.language)}
             playerIndex={0}
             showTyping={true}
           />
@@ -218,7 +220,10 @@ export default function ConversationPage({
       {isMyTurn && currentTurnMsg && !isDone && (
         <PromptCard
           message={currentTurnMsg}
-          language={room.language as Language}
+          displayName={room.language}
+          romanSymbol={getRomanSymbol(room.language)}
+          nativeSymbol={getNativeSymbol(room.language)}
+          speechCode={getSpeechCode(room.language)}
           inputMode={inputMode}
           onInputModeChange={saveInputMode}
           onSubmit={handleSubmit}

@@ -12,7 +12,7 @@ interface BubbleProps {
   textMode: TextMode
   speechCode: string
   playerIndex: number
-  showTyping?: boolean   // AI typing animation
+  showTyping?: boolean
 }
 
 function getDisplayText(msg: Message, mode: TextMode): string {
@@ -30,7 +30,6 @@ function speak(text: string, lang: string) {
   window.speechSynthesis.speak(utt)
 }
 
-// Diff rendered as colored words
 function DiffText({ input, target }: { input: string; target: string }) {
   const tokens = diffWords(input, target)
   return (
@@ -54,11 +53,11 @@ export function MessageBubble({
   const displayName = isAI ? 'AI' : (participant?.display_name ?? 'Player')
   const hasResponse = !!message.response
 
-  // AI bubble with typing animation
+  // ── AI typing animation ──────────────────────────────────────────────────
   if (isAI && showTyping) {
     return (
-      <div className="flex flex-col items-center gap-1 animate-fade-up">
-        <span className="text-xs font-semibold text-muted">AI</span>
+      <div className="flex flex-col items-start gap-1 animate-fade-up">
+        <span className="text-xs font-semibold text-muted px-1">AI</span>
         <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3">
           <TypingDots />
         </div>
@@ -66,7 +65,7 @@ export function MessageBubble({
     )
   }
 
-  // AI turn — always shown, no response needed
+  // ── AI turn (responded) ──────────────────────────────────────────────────
   if (isAI) {
     return (
       <div className="flex flex-col items-start gap-1 max-w-[80%] animate-fade-up">
@@ -84,101 +83,71 @@ export function MessageBubble({
     )
   }
 
-  return (
-    <div className={clsx(
-      'flex flex-col gap-1 max-w-[82%] animate-fade-up',
-      isMe ? 'self-end items-end' : 'self-start items-start',
-    )}>
-      {/* Sender name */}
-      {hasResponse && (
-        <span className="text-xs font-semibold px-1" style={{ color }}>
-          {isMe ? 'You' : displayName}
-        </span>
-      )}
-
-      {/* Pre-response: show target text in bubble */}
-      {/* {!hasResponse && (
-        <div className={clsx(
-          'px-4 py-3 rounded-2xl text-sm leading-relaxed',
-          isMe
-            ? 'bg-accent/10 border border-accent/20 text-ink rounded-br-sm'
-            : 'bg-white border border-border text-ink rounded-bl-sm',
-        )}>
+  // ── Other player's bubble ────────────────────────────────────────────────
+  // Always shows clean target text — no score, no diff
+  if (!isMe) {
+    if (!hasResponse) return null
+    return (
+      <div className="flex flex-col items-start gap-1 max-w-[82%] animate-fade-up">
+        <span className="text-xs font-semibold px-1" style={{ color }}>{displayName}</span>
+        <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
           {getDisplayText(message, textMode)}
         </div>
-      )} */}
-
-      {/* For other users — always show clean target line regardless of response */}
-      {!isMe && (
-        <div className="px-4 py-3 rounded-2xl rounded-bl-sm text-sm leading-relaxed bg-white border border-border text-ink">
-          {getDisplayText(message, textMode)}
-        </div>
-      )}
-
-      {/* Post-response reveal */}
-      {hasResponse && (
-        <div className={clsx(
-          'flex flex-col gap-2 px-4 py-3 rounded-2xl text-sm',
-          isMe
-            ? 'bg-accent text-white rounded-br-sm'
-            : 'bg-white border border-border text-ink rounded-bl-sm',
-        )}>
-          {/* What they typed — with diff */}
-          {isMe && (
-            <div>
-              <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
-                You typed
-              </p>
-              <p className="font-medium">
-                <DiffText input={message.response!.text} target={
-                  message.response!.input_mode === 'native' ? message.native_text : message.roman_text
-                } />
-              </p>
-            </div>
-          )}
-
-          {/* Target reveal */}
-          {isMe && (
-            <div className={clsx('border-t pt-2', isMe ? 'border-white/20' : 'border-border')}>
-              <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
-                Target
-              </p>
-              <p className="font-medium">{message.roman_text}</p>
-              {message.native_text !== message.roman_text && (
-                <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/70' : 'text-muted')}>
-                  {message.native_text}
-                </p>
-              )}
-              <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/60' : 'text-muted/70')}>
-                {message.english_text}
-              </p>
-            </div>
-          )}
-
-          {/* Score */}
-          <div className={clsx(
-            'rounded-xl px-3 py-2 border text-xs',
-            isMe ? 'bg-white/10 border-white/20' : SCORE_BG[message.response!.score_label] ?? 'bg-border/30 border-border',
-          )}>
-            <p className={clsx('font-bold', isMe ? 'text-white' : SCORE_COLOR[message.response!.score_label])}>
-              {message.response!.score_label} · {message.response!.score}%
-            </p>
-            <p className={clsx(isMe ? 'text-white/60' : 'text-muted', 'mt-0.5')}>
-              {message.response!.score_breakdown}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Listen button */}
-      {hasResponse && (
         <button
           onClick={() => speak(message.roman_text, speechCode)}
           className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
         >
           🔊 Listen
         </button>
-      )}
+      </div>
+    )
+  }
+
+  // ── My bubble — full reveal with diff and score ──────────────────────────
+  if (!hasResponse) return null
+  return (
+    <div className="flex flex-col items-end gap-1 max-w-[82%] self-end animate-fade-up">
+      <span className="text-xs font-semibold px-1" style={{ color }}>You</span>
+
+      <div className="flex flex-col gap-2 px-4 py-3 rounded-2xl rounded-br-sm text-sm bg-accent text-white">
+
+        {/* What you typed — with diff */}
+        <div>
+          <p className="text-xs font-bold mb-1 uppercase tracking-wide text-white/60">You typed</p>
+          <p className="font-medium">
+            <DiffText
+              input={message.response!.text}
+              target={message.response!.input_mode === 'native' ? message.native_text : message.roman_text}
+            />
+          </p>
+        </div>
+
+        {/* Target reveal */}
+        <div className="border-t border-white/20 pt-2">
+          <p className="text-xs font-bold mb-1 uppercase tracking-wide text-white/60">Target</p>
+          <p className="font-medium">{message.roman_text}</p>
+          {message.native_text !== message.roman_text && (
+            <p className="text-xs mt-0.5 text-white/70">{message.native_text}</p>
+          )}
+          <p className="text-xs mt-0.5 text-white/60 italic">{message.english_text}</p>
+        </div>
+
+        {/* Score */}
+        <div className="rounded-xl px-3 py-2 border text-xs bg-white/10 border-white/20">
+          <p className="font-bold text-white">
+            {message.response!.score_label} · {message.response!.score}%
+          </p>
+          <p className="text-white/60 mt-0.5">{message.response!.score_breakdown}</p>
+        </div>
+      </div>
+
+      {/* Listen */}
+      <button
+        onClick={() => speak(message.roman_text, speechCode)}
+        className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
+      >
+        🔊 Listen
+      </button>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { Conversation, Room, PLAYER_COLORS, SCORE_COLOR, SCORE_BG } from '@/type
 import { TopNav } from '@/components/ui/TopNav'
 import { Button, Card, Spinner, Badge } from '@/components/ui'
 import { clsx } from 'clsx'
+import { useMeta } from '@/hooks/useMeta'
 
 function PlayerSummary({
   displayName, scores, color, isYou,
@@ -51,9 +52,19 @@ function PlayerSummary({
   )
 }
 
+function speak(text: string, lang: string) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return
+  window.speechSynthesis.cancel()
+  const utt = new SpeechSynthesisUtterance(text)
+  utt.lang = lang
+  utt.rate = 0.85
+  window.speechSynthesis.speak(utt)
+}
+
 export default function ResultsPage({ params }: { params: { roomId: string; convId: string } }) {
   const router = useRouter()
   const { token } = useAuth()
+  const { getSpeechCode } = useMeta()
   const [conv, setConv] = useState<Conversation | null>(null)
   const [room, setRoom] = useState<Room | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
@@ -145,7 +156,7 @@ export default function ResultsPage({ params }: { params: { roomId: string; conv
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-muted">{name}</p>
-                    <p className="text-sm truncate">{msg.roman_text}</p>
+                    <p className="text-sm truncate">{msg.native_text}</p>
                   </div>
                   {msg.response ? (
                     <span className={clsx('text-xs font-bold px-2 py-0.5 rounded-full border', SCORE_BG[msg.response.score_label])}>
@@ -169,6 +180,12 @@ export default function ResultsPage({ params }: { params: { roomId: string; conv
                           <p className="text-xs text-muted mt-0.5">{msg.native_text}</p>
                         )}
                         <p className="text-xs text-muted/70 mt-0.5 italic">{msg.english_text}</p>
+                        <button
+                          onClick={() => speak(msg.roman_text, getSpeechCode(room.language))}
+                          className="text-xs text-accent2 hover:underline flex items-center gap-1 mt-1"
+                        >
+                          🔊 Listen
+                        </button>
                       </div>
                       {msg.response && (
                         <>

@@ -68,7 +68,7 @@ export function ScoreBar({ conversation, currentUserId }: ScoreBarProps) {
         <span className="text-xs text-muted">
           Turn{' '}
           <strong>{Math.min(conversation.current_turn - 1, 20)}</strong>
-          /20
+          /{conversation.messages.length}
         </span>
       </div>
     </div>

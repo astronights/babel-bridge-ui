@@ -204,13 +204,6 @@ export default function ConversationPage({
           </div>
         )}
 
-        {/* Waiting for other player */}
-        {!isDone && !isMyTurn && currentTurnMsg && !currentParticipant?.is_ai && (
-          <div className="text-center text-sm text-muted py-2">
-            Waiting for <strong>{currentParticipant?.display_name ?? 'player'}</strong>…
-          </div>
-        )}
-
         <div ref={messagesEndRef} />
       </div>
 

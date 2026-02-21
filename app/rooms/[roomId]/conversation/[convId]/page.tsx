@@ -133,7 +133,7 @@ export default function ConversationPage({
           <p className="text-cream/40 text-xs">{room.language} · {room.level}</p>
         </div>
         {/* Text display toggle */}
-        <div className="w-40 flex-shrink-0">
+        <div className="w-fit flex-shrink-0">
           <PillToggle
             options={[
               { value: 'roman' as TextMode, label: 'ABC' },

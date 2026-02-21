@@ -132,13 +132,13 @@ export function PillToggle<T extends string>({
   options, value, onChange,
 }: { options: { value: T; label: string }[]; value: T; onChange: (v: T) => void }) {
   return (
-    <div className="flex border border-border rounded-xl overflow-hidden">
+    <div className="inline-flex border border-border rounded-xl overflow-hidden">
       {options.map(o => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
           className={clsx(
-            'px-3 py-1.5 text-xs font-semibold transition-all',
+            'px-2 py-1.5 text-xs font-semibold transition-all',
             value === o.value ? 'bg-ink text-cream' : 'text-muted hover:text-ink',
           )}
         >

@@ -196,7 +196,16 @@ export default function DashboardPage() {
         ) : (
           <div className="flex flex-col gap-3">
             {rooms.map(room => (
-              <RoomCard key={room.id} room={room} onClick={() => router.push(`/rooms/${room.id}`)} />
+              <RoomCard key={room.id} room={room} 
+                        onClick={() => {
+                if (room.status === 'active' && room.last_conversation_id) {
+                  router.push(`/rooms/${room.id}/conversation/${room.last_conversation_id}`)
+                } else if (room.status === 'completed' && room.last_conversation_id) {
+                  router.push(`/rooms/${room.id}/conversation/${room.last_conversation_id}/results`)
+                } else {
+                  router.push(`/rooms/${room.id}`)
+                }
+              }} />
             ))}
           </div>
         )}

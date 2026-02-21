@@ -44,14 +44,6 @@ export default function WaitingRoomPage({ params }: { params: { roomId: string }
         }
       }
 
-      // Completed conversations also navigate to results
-      if (data.status === 'completed') {
-        const convs = await api.conversations.list(params.roomId)
-        if (convs.length > 0) {
-          router.push(`/rooms/${params.roomId}/conversation/${convs[0].id}/results`)
-        }
-      }
-
     } catch { /* silent */ }
   }, [params.roomId, router])
 

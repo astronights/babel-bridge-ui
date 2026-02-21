@@ -54,6 +54,7 @@ export interface Room {
   members: Member[]
   last_scenario?: string
   last_scenario_title?: string
+  last_conversation_id?: string
 }
 
 export interface Conversation {

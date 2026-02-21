@@ -164,7 +164,7 @@ export default function ConversationPage({
             : participantColorMap[participant?.user_id ?? ''] ?? 1
 
           // Skip future unresponded turns silently
-          if (!msg.response && msg.turn_number > conv.current_turn) return null
+          if (!msg.response) return null
           // Skip current AI turn if it hasn't been displayed yet (handled by aiTyping)
           if (isAI && msg.turn_number === conv.current_turn && !msg.response) return null
 

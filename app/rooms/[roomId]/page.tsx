@@ -89,6 +89,7 @@ export default function WaitingRoomPage({ params }: { params: { roomId: string }
 
   const isHost = room.created_by === userId
   const isFull = room.members.length >= room.max_players
+  const hasEnoughPlayers = room.members.length >= room.max_players - 1
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -199,14 +200,16 @@ export default function WaitingRoomPage({ params }: { params: { roomId: string }
         {/* Status / start */}
         <div className="bg-accent2/10 border border-accent2/20 rounded-xl px-4 py-3 text-sm text-accent2 mb-4">
           {isHost
-            ? isFull
-              ? `Room is full (${room.members.length} players). Start whenever!`
-              : `${room.members.length} of ${room.max_players} joined. Start when ready, empty slots will be AI.`
-            : 'Waiting for the host to start the conversation…'}
+            ? hasEnoughPlayers
+              ? isFull
+                ? `Room is full (${room.members.length} players). Start whenever!`
+                : `${room.members.length} of ${room.max_players} joined. Start when ready, empty slots will be AI.`
+              : `Waiting for more players to join… (${room.members.length}/${room.max_players})`
+          : 'Waiting for the host to start the conversation…'}
         </div>
 
         {isHost && (
-          <Button full loading={starting} onClick={startConversation}>
+          <Button full loading={starting} onClick={startConversation} disabled={!hasEnoughPlayers}>
             Start Conversation 🚀
           </Button>
         )}

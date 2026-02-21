@@ -52,6 +52,8 @@ export interface Room {
   created_by: string
   created_at: string
   members: Member[]
+  last_scenario?: string
+  last_scenario_title?: string
 }
 
 export interface Conversation {

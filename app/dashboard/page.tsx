@@ -26,14 +26,28 @@ function RoomCard({ room, onClick }: { room: Room; onClick: () => void }) {
     <button onClick={onClick} className="w-full text-left">
       <Card className="p-4 hover:border-accent hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white text-xs font-black flex-shrink-0"
-            style={{ background: color }}>
-            {room.language.slice(0, 3).toUpperCase()}
+
+          {/* Language + level badge — tooltip shows full scenario */}
+          <div
+            title={room.last_scenario ?? ''}
+            className="w-11 rounded-xl flex flex-col items-center justify-center text-white flex-shrink-0 py-1.5 gap-0.5 cursor-help"
+            style={{ background: color }}
+          >
+            <span className="text-xs font-black tracking-wide leading-none">
+              {room.language.slice(0, 3).toUpperCase()}
+            </span>
+            <span className="text-xs font-bold leading-none opacity-80">
+              {room.level}
+            </span>
           </div>
+
+          {/* Text rows */}
           <div className="flex-1 min-w-0">
-            <p className="font-semibold text-sm">{room.language} · {room.level}</p>
+            <p className="font-semibold text-sm truncate">
+              {room.last_scenario_title ?? 'Waiting to start…'}
+            </p>
             <p className="text-xs text-muted mt-0.5">
-              {room.members.length}/{room.max_players} players · Code: <strong>{room.join_code}</strong>
+              {room.members.length}/{room.max_players} players · {"["}<strong>{room.join_code}</strong>{"]"}
             </p>
           </div>
           {statusBadge}

@@ -133,11 +133,11 @@ export default function ConversationPage({
           <p className="text-cream/40 text-xs">{room.language} · {room.level}</p>
         </div>
         {/* Text display toggle */}
-        <div className="w-44 flex-shrink-0">
+        <div className="w-48 flex-shrink-0">
           <PillToggle
             options={[
-              { value: 'roman' as TextMode, label: 'Roman' },
-              { value: 'native' as TextMode, label: 'Native' },
+              { value: 'roman' as TextMode, label: 'ABC' },
+              { value: 'native' as TextMode, label: '文' },
               { value: 'english' as TextMode, label: 'EN' },
             ]}
             value={textMode}
@@ -164,7 +164,7 @@ export default function ConversationPage({
             : participantColorMap[participant?.user_id ?? ''] ?? 1
 
           // Skip future unresponded turns silently
-          if (!msg.response) return null
+          if (!msg.response && msg.turn_number > conv.current_turn) return null
           // Skip current AI turn if it hasn't been displayed yet (handled by aiTyping)
           if (isAI && msg.turn_number === conv.current_turn && !msg.response) return null
 

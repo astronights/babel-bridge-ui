@@ -138,7 +138,7 @@ export function PillToggle<T extends string>({
           key={o.value}
           onClick={() => onChange(o.value)}
           className={clsx(
-            'flex-1 py-1.5 text-xs font-semibold transition-all',
+            'px-3 py-1.5 text-xs font-semibold transition-all',
             value === o.value ? 'bg-ink text-cream' : 'text-muted hover:text-ink',
           )}
         >

@@ -91,18 +91,27 @@ export function MessageBubble({
       isMe ? 'self-end items-end' : 'self-start items-start',
     )}>
       {/* Sender name */}
-      <span className="text-xs font-semibold px-1" style={{ color }}>
-        {isMe ? 'You' : displayName}
-      </span>
+      {hasResponse && (
+        <span className="text-xs font-semibold px-1" style={{ color }}>
+          {isMe ? 'You' : displayName}
+        </span>
+      )}
 
       {/* Pre-response: show target text in bubble */}
-      {!hasResponse && (
+      {/* {!hasResponse && (
         <div className={clsx(
           'px-4 py-3 rounded-2xl text-sm leading-relaxed',
           isMe
             ? 'bg-accent/10 border border-accent/20 text-ink rounded-br-sm'
             : 'bg-white border border-border text-ink rounded-bl-sm',
         )}>
+          {getDisplayText(message, textMode)}
+        </div>
+      )} */}
+
+      {/* For other users — always show clean target line regardless of response */}
+      {!isMe && (
+        <div className="px-4 py-3 rounded-2xl rounded-bl-sm text-sm leading-relaxed bg-white border border-border text-ink">
           {getDisplayText(message, textMode)}
         </div>
       )}
@@ -116,32 +125,36 @@ export function MessageBubble({
             : 'bg-white border border-border text-ink rounded-bl-sm',
         )}>
           {/* What they typed — with diff */}
-          <div>
-            <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
-              You typed
-            </p>
-            <p className="font-medium">
-              <DiffText input={message.response!.text} target={
-                message.response!.input_mode === 'native' ? message.native_text : message.roman_text
-              } />
-            </p>
-          </div>
+          {isMe && (
+            <div>
+              <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
+                You typed
+              </p>
+              <p className="font-medium">
+                <DiffText input={message.response!.text} target={
+                  message.response!.input_mode === 'native' ? message.native_text : message.roman_text
+                } />
+              </p>
+            </div>
+          )}
 
           {/* Target reveal */}
-          <div className={clsx('border-t pt-2', isMe ? 'border-white/20' : 'border-border')}>
-            <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
-              Target
-            </p>
-            <p className="font-medium">{message.roman_text}</p>
-            {message.native_text !== message.roman_text && (
-              <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/70' : 'text-muted')}>
-                {message.native_text}
+          {isMe && (
+            <div className={clsx('border-t pt-2', isMe ? 'border-white/20' : 'border-border')}>
+              <p className={clsx('text-xs font-bold mb-1 uppercase tracking-wide', isMe ? 'text-white/60' : 'text-muted')}>
+                Target
               </p>
-            )}
-            <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/60' : 'text-muted/70')}>
-              {message.english_text}
-            </p>
-          </div>
+              <p className="font-medium">{message.roman_text}</p>
+              {message.native_text !== message.roman_text && (
+                <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/70' : 'text-muted')}>
+                  {message.native_text}
+                </p>
+              )}
+              <p className={clsx('text-xs mt-0.5', isMe ? 'text-white/60' : 'text-muted/70')}>
+                {message.english_text}
+              </p>
+            </div>
+          )}
 
           {/* Score */}
           <div className={clsx(
@@ -159,12 +172,14 @@ export function MessageBubble({
       )}
 
       {/* Listen button */}
-      <button
-        onClick={() => speak(message.roman_text, speechLang)}
-        className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
-      >
-        🔊 Listen
-      </button>
+      {hasResponse && (
+        <button
+          onClick={() => speak(message.roman_text, speechLang)}
+          className="text-xs text-accent2 hover:underline flex items-center gap-1 px-1"
+        >
+          🔊 Listen
+        </button>
+      )}
     </div>
   )
 }

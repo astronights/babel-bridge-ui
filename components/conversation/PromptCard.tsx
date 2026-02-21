@@ -53,8 +53,8 @@ export function PromptCard({
         {!isSwedish && (
           <PillToggle
             options={[
-              { value: 'roman' as InputMode, label: 'Roman' },
-              { value: 'native' as InputMode, label: 'Native' },
+              { value: 'roman' as InputMode, label: ' ABC ' },
+              { value: 'native' as InputMode, label: ' 文 ' },
             ]}
             value={inputMode}
             onChange={onInputModeChange}

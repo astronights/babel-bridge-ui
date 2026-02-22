@@ -20,6 +20,8 @@ export default function AuthPage() {
     if (token) router.push('/dashboard')
   }, [token, router])
 
+  if (token) return null
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')

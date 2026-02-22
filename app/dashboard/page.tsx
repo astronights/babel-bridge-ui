@@ -14,7 +14,7 @@ const LANG_COLORS: Record<string, string> = {
   Swedish: '#006aa7',
 }
 
-function RoomCard({ room, onClick }: { room: Room; onClick: () => void }) {
+function RoomCard({ room, onClick, onDelete, isHost }: { room: Room; onClick: () => void, onDelete: () => void, isHost: boolean }) {
   const color = LANG_COLORS[room.language] ?? '#4a9eff'
   const statusBadge = room.status === 'completed'
     ? <Badge color="muted">Completed</Badge>
@@ -50,6 +50,17 @@ function RoomCard({ room, onClick }: { room: Room; onClick: () => void }) {
               {room.members.length}/{room.max_players} players · {"["}<strong>{room.join_code}</strong>{"]"}
             </p>
           </div>
+
+          {/* Delete room button (only for host) + status badge */}
+          {isHost && (
+            <button
+              onClick={e => { e.stopPropagation(); onDelete() }}
+              className="text-muted hover:text-red-500 transition-colors p-1"
+              title="Delete room"
+            >
+              🗑
+            </button>
+          )}
           {statusBadge}
         </div>
       </Card>
@@ -67,6 +78,7 @@ export default function DashboardPage() {
   const { meta } = useMeta()
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
 
   // Create form
   const [lang, setLang] = useState('')
@@ -89,6 +101,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!token) { router.push('/'); return }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      setUserId(payload.sub)
+    } catch (e) { /* ignore */ }
     loadRooms()
   }, [token, router, loadRooms])
 
@@ -120,6 +136,15 @@ export default function DashboardPage() {
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to join room')
     } finally { setSubmitting(false) }
+  }
+
+  async function handleDelete(roomId: string) {
+    try {
+      await api.rooms.delete(roomId)
+      loadRooms()
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to delete room')
+    }
   }
 
   return (
@@ -205,7 +230,10 @@ export default function DashboardPage() {
                 } else {
                   router.push(`/rooms/${room.id}`)
                 }
-              }} />
+              }}
+                        isHost={room.created_by === userId}
+                        onDelete={() => handleDelete(room.id)} 
+                />
             ))}
           </div>
         )}

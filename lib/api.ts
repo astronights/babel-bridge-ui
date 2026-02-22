@@ -63,6 +63,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ join_code, display_name }),
       }),
+    delete: (roomId: string) =>
+      request<void>(`/rooms/${roomId}`, { method: 'DELETE' }),
   },
 
   // ── Conversations ──────────────────────────────────────────────────────────

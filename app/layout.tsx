@@ -32,6 +32,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#1a1a2e" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link rel="icon" href="/icons/fish-icon.png" type="image/png" />
+        <script dangerouslySetInnerHTML={{ __html: `
+          if (typeof navigator.serviceWorker !== 'undefined') {
+            navigator.serviceWorker.register('sw.js')
+          }
+        `}} />
       </head>
       <body className={`${dm.variable} ${playfair.variable} font-dm bg-cream min-h-screen`}>
         <AuthProvider>

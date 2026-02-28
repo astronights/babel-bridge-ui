@@ -1,12 +1,19 @@
 {
+  "id": "com.astronights.babelbridge",
   "name": "BabelBridge",
   "short_name": "BabelBridge",
   "description": "AI-powered multiplayer language learning",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#1a1a2e",
   "theme_color": "#1a1a2e",
   "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "games"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/fish-192.png",

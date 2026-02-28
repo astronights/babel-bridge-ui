@@ -8,14 +8,24 @@ import { TopNav } from '@/components/ui/TopNav'
 import { Button, Input, Select, Card, Alert, Badge, Spinner } from '@/components/ui'
 import { useMeta } from '@/hooks/useMeta'
 
-const LANG_COLORS: Record<string, string> = {
-  Russian: '#e8643a',
-  Chinese: '#e63946',
-  Swedish: '#006aa7',
+const LANG_COLORS = [
+  '#e8643a', // orange
+  '#e63946', // red
+  '#006aa7', // blue
+  '#3dba7e', // green
+  '#d4a843', // gold
+  '#9b59b6', // purple
+  '#e91e8c', // pink
+  '#00897b', // teal
+]
+
+function getLangColor(language: string): string {
+  const index = language.charCodeAt(0) % LANG_COLORS.length
+  return LANG_COLORS[index]
 }
 
 function RoomCard({ room, onClick, onDelete, isHost }: { room: Room; onClick: () => void, onDelete: () => void, isHost: boolean }) {
-  const color = LANG_COLORS[room.language] ?? '#4a9eff'
+  const color = getLangColor(room.language)
   const statusBadge = room.status === 'completed'
     ? <Badge color="muted">Completed</Badge>
     : room.status === 'active'

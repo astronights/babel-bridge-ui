@@ -107,7 +107,7 @@ export default function AuthPage() {
 
           {/* Features strip */}
           <div className="flex flex-wrap gap-2 justify-center mt-5 pt-4 border-t border-border">
-            {['🌍 Russian, Chinese, Swedish', '📊 A1–C2 levels', '🤖 AI conversations', '🔊 TTS + scoring'].map(f => (
+            {['🌍 Russian, Chinese, Swedish, and more', '📊 A1–C2 levels', '🤖 AI conversations', '🔊 TTS + scoring'].map(f => (
               <span key={f} className="text-xs text-muted">{f}</span>
             ))}
           </div>

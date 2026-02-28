@@ -7,6 +7,9 @@
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+    },
   "background_color": "#1a1a2e",
   "theme_color": "#1a1a2e",
   "orientation": "portrait",
@@ -26,6 +29,57 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/conversation.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Conversation"
+    },
+    {
+      "src": "/screenshots/waiting-room.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Configuration"
+    },
+    {
+      "src": "/screenshots/results.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Results"
+    },
+    {
+      "src": "/screenshots/dashboard.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Dashboard"
+    },
+    {
+      "src": "/screenshots/login.png",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Login"
+    },
+    {
+      "src": "/screenshots/create-room.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Create Room"
+    },
+    {
+      "src": "/screenshots/join-room.jpeg",
+      "sizes": "921x1842",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Join Room"
     }
   ]
 }

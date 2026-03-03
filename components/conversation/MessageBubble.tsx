@@ -4,6 +4,13 @@ import { Message, Participant, TextMode, SCORE_COLOR, SCORE_BG, PLAYER_COLORS } 
 import { diffWords } from '@/lib/diff'
 import { TypingDots } from '@/components/ui'
 
+const RTL_CODES = ['ar', 'he']
+
+function getTextDir(langCode: string, textMode: TextMode): 'rtl' | 'ltr' {
+  if (textMode === 'native' && RTL_CODES.includes(langCode)) return 'rtl'
+  return 'ltr'
+}
+
 interface BubbleProps {
   message: Message
   isMe: boolean
@@ -53,6 +60,9 @@ export function MessageBubble({
   const displayName = isAI ? 'AI' : (participant?.display_name ?? 'Player')
   const hasResponse = !!message.response
 
+  const langCode = speechCode.split('-')[0]
+  const textDir = getTextDir(langCode, textMode)
+
   // ── AI typing animation ──────────────────────────────────────────────────
   if (isAI && showTyping) {
     return (
@@ -70,7 +80,7 @@ export function MessageBubble({
     return (
       <div className="flex flex-col items-start gap-1 max-w-[80%] animate-fade-up">
         <span className="text-xs font-semibold px-1" style={{ color }}>AI</span>
-        <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
+        <div dir={textDir} className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
           {getDisplayText(message, textMode)}
         </div>
         <button
@@ -90,7 +100,7 @@ export function MessageBubble({
     return (
       <div className="flex flex-col items-start gap-1 max-w-[82%] animate-fade-up">
         <span className="text-xs font-semibold px-1" style={{ color }}>{displayName}</span>
-        <div className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
+        <div dir={textDir} className="bg-white border border-border rounded-2xl rounded-bl-sm px-4 py-3 text-sm leading-relaxed">
           {getDisplayText(message, textMode)}
         </div>
         <button
@@ -127,7 +137,7 @@ export function MessageBubble({
           <p className="text-xs font-bold mb-1 uppercase tracking-wide text-white/60">Target</p>
           <p className="font-medium">{message.roman_text}</p>
           {message.native_text !== message.roman_text && (
-            <p className="text-xs mt-0.5 text-white/70">{message.native_text}</p>
+            <p dir={textDir} className="text-xs mt-0.5 text-white/70">{message.native_text}</p>
           )}
           <p className="text-xs mt-0.5 text-white/60 italic">{message.english_text}</p>
         </div>

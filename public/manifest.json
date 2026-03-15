@@ -19,13 +19,13 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/fish-192.png",
+      "src": "/icons/tower-192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/fish-512.png",
+      "src": "/icons/tower-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

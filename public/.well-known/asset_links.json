@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.astronights.babelbridge",
+      "sha256_cert_fingerprints": [
+        "01:EE:FE:F0:8D:3C:BA:BF:1C:40:06:D2:4E:F9:D7:2B:94:CB:82:8C:3F:BB:3C:4F:C7:CB:D5:17:26:00:D5:AE"
+      ]
+    }
+  }
+]

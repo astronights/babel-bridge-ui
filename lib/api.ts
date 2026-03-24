@@ -18,6 +18,14 @@ async function request<T>(
 
   const res = await fetch(`${BASE}${path}`, { ...options, headers })
 
+  if (res.status === 401) {
+    localStorage.removeItem('lt_token')
+    localStorage.removeItem('lt_username')
+    window.location.href = '/'
+    throw new Error('Session expired. Please sign in again.')
+  }
+
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: 'Request failed' }))
     throw new Error(err.detail ?? `HTTP ${res.status}`)

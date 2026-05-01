@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const BASE_URL = 'https://your-babel-bridge-url.vercel.app' // ← replace with your deployed URL
+const BASE_URL = 'https://babel-bridge-ui.vercel.app'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

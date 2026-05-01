@@ -6,7 +6,7 @@ import { AuthProvider } from '@/hooks/useAuth'
 const dm = DM_Sans({ subsets: ['latin'], variable: '--font-dm', weight: ['300', '400', '500', '600'] })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', weight: ['400', '700', '900'] })
 
-const BASE_URL = 'https://your-babel-bridge-url.vercel.app' // ← replace with your deployed URL
+const BASE_URL = 'https://babel-bridge-ui.vercel.app'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

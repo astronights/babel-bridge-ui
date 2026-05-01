@@ -6,9 +6,21 @@ import { AuthProvider } from '@/hooks/useAuth'
 const dm = DM_Sans({ subsets: ['latin'], variable: '--font-dm', weight: ['300', '400', '500', '600'] })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', weight: ['400', '700', '900'] })
 
+const BASE_URL = 'https://your-babel-bridge-url.vercel.app' // ← replace with your deployed URL
+
 export const metadata: Metadata = {
-  title: 'Babel Bridge',
-  description: 'AI-powered multiplayer language learning',
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'BabelBridge — AI Multiplayer Language Learning',
+    template: '%s | BabelBridge',
+  },
+  description:
+    'Practice Russian, Chinese, Swedish and more with friends. BabelBridge uses AI to run real conversations, score your responses and help you improve — play with anyone, anytime.',
+  keywords: [
+    'language learning app', 'multiplayer language learning', 'AI language practice',
+    'practice languages with friends', 'Russian practice online', 'Chinese learning app',
+    'language learning game', 'AI conversation practice',
+  ],
   manifest: '/manifest.json',
   themeColor: '#1a1a2e',
   appleWebApp: {
@@ -22,6 +34,20 @@ export const metadata: Metadata = {
     maximumScale: 1,
     userScalable: false,
   },
+  openGraph: {
+    type: 'website',
+    siteName: 'BabelBridge',
+    title: 'BabelBridge — AI Multiplayer Language Learning',
+    description:
+      'Practice languages with friends, guided by AI. Real conversations, instant scoring, A1–C2 levels.',
+    url: BASE_URL,
+  },
+  twitter: {
+    card: 'summary',
+    title: 'BabelBridge — AI Multiplayer Language Learning',
+    description: 'Practice languages with friends, guided by AI. Real conversations, instant scoring.',
+  },
+  robots: { index: true, follow: true },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,8 +1,38 @@
-# BabelBridge — Next.js Frontend
+# BabelBridge
 
-AI-powered multiplayer language learning app. Built with Next.js 14, TypeScript, and Tailwind CSS.
+**AI-powered multiplayer language learning — practice with friends, guided by AI.**
 
-## Setup
+BabelBridge lets you run real conversations with friends in a foreign language. An AI referee scores each response, highlights your mistakes word-by-word, and keeps the session moving at your pace. Supports Russian, Chinese, Swedish and more across A1–C2 levels.
+
+---
+
+## Features
+
+- **Multiplayer rooms** — create or join a study room with a short code
+- **AI-guided conversations** — the AI plays as a participant and scores every turn
+- **Live scoring** — word-level diff highlighting shows exactly what was right and wrong
+- **Text mode toggle** — switch between Roman script, native script, and English translation mid-session
+- **Text-to-speech** — listen button on every bubble using Web Speech API
+- **Hint system** — collapsible hint on the prompt card before you commit your answer
+- **Results breakdown** — per-player averages and a full turn-by-turn accordion at the end
+- **PWA** — installable on mobile, works offline for static assets
+
+---
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Styling | Tailwind CSS |
+| Auth | JWT stored in localStorage |
+| Backend | FastAPI (separate repo) |
+| Realtime | Polling every 2.5s |
+| TTS | Web Speech API |
+
+---
+
+## Getting started
 
 ### 1. Install dependencies
 
@@ -12,13 +42,15 @@ npm install
 
 ### 2. Configure environment
 
-Edit `.env.local`:
+```bash
+cp .env.local.example .env.local
+```
+
+Set your backend URL:
 
 ```
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
-
-Point this at your running FastAPI backend.
 
 ### 3. Run
 
@@ -26,38 +58,26 @@ Point this at your running FastAPI backend.
 npm run dev
 ```
 
-Open http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Deploy to Vercel
-
-1. Push to GitHub
-2. Import at vercel.com
-3. Add environment variable:
-   - `NEXT_PUBLIC_API_URL` → your deployed FastAPI URL (e.g. `https://your-api.railway.app`)
-4. Deploy
-
----
-
-## Screens
+## Routes
 
 | Route | Description |
-|-------|-------------|
-| `/` | Auth — login / register tabbed |
-| `/dashboard` | Rooms list + create/join forms |
-| `/rooms/[roomId]` | Waiting room — members, join code, scenario input, start button |
-| `/rooms/[roomId]/conversation/[convId]` | Live conversation — bubbles, prompt card, score bar, TTS |
-| `/rooms/[roomId]/conversation/[convId]/results` | Results — per-player averages + turn-by-turn breakdown |
+|---|---|
+| `/` | Login / register |
+| `/dashboard` | Rooms list — create or join |
+| `/rooms/[roomId]` | Waiting room — members, join code, start |
+| `/rooms/[roomId]/conversation/[convId]` | Live conversation |
+| `/rooms/[roomId]/conversation/[convId]/results` | Results screen |
+| `/privacy` | Privacy policy |
 
-## Key Features
+---
 
-- **JWT stored in localStorage** — persists across tabs and refreshes
-- **Polling every 2.5s** — keeps waiting room and conversation in sync
-- **Text mode toggle** (Roman / Native / English) — in the conversation header, applies to all bubbles simultaneously, saved to localStorage
-- **Input mode toggle** (Roman / Native) — on the prompt card per turn, saved per language
-- **Post-submit reveal** — after submitting, bubble shows what you typed with word-level diff highlighting (green = correct, red = wrong), the target line, and score breakdown
-- **AI turns** — shown with a 1.8s typing animation before revealing the line
-- **TTS** — 🔊 Listen button on every bubble uses Web Speech API at 0.85x speed
-- **Hint system** — collapsible "Show hint" on the prompt card before submitting
-- **Results screen** — expandable turn-by-turn accordion with full breakdown
+## Deployment
+
+1. Push to GitHub
+2. Import at [vercel.com](https://vercel.com)
+3. Add environment variable: `NEXT_PUBLIC_API_URL` → your deployed FastAPI URL
+4. Deploy

@@ -1,3 +1,11 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Privacy policy for BabelBridge — how we handle your data.',
+  robots: { index: true, follow: false },
+}
+
 export default function PrivacyPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 py-12">

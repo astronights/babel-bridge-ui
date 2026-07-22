@@ -1,0 +1,38 @@
+{
+  "packageId": "com.astronights.babelbridge",
+  "host": "babel-bridge-ui.vercel.app",
+  "name": "BabelBridge",
+  "launcherName": "BabelBridge",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#1a1a2e",
+  "backgroundColor": "#1a1a2e",
+  "startUrl": "/",
+  "iconUrl": "https://babel-bridge-ui.vercel.app/icons/tower-512-maskable.png",
+  "maskableIconUrl": "https://babel-bridge-ui.vercel.app/icons/tower-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signing": {
+    "keyPath": "",
+    "alias": "babelbridge"
+  },
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://babel-bridge-ui.vercel.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableNotifications": false,
+  "minSdkVersion": 24,
+  "targetSdkVersion": 36
+}
